@@ -1,39 +1,35 @@
-# linesplit_detector.py
+# src/linesplit_detector.py
 
-from similarity_metrics import normalized_levenshtein_distance
+from src.similarity_metrics import normalized_levenshtein_distance
 
 def detect_line_split(old_content: str, remaining_right_list: list) -> list:
     """
-    Detects 1-to-N mappings (line splits) by iteratively combining adjacent
-    unmapped lines in the new file and checking similarity.
+    Detects 1-to-N mappings by iteratively combining adjacent lines and checking similarity.
+    (Remaining right list: [(new_num, content), ...])
     """
     if not remaining_right_list:
         return []
 
-    # remaining_right_list structure: [(new_num, content), ...]
-    
     best_match_indices = []
     current_similarity = -1.0
-    
-    # We only look at contiguous blocks, starting from the first remaining line
+    FINAL_SPLIT_THRESHOLD = 0.65 
+
     for i in range(len(remaining_right_list)):
-        
-        # Iteratively build the combined new line text
+        # Combined content up to the current line (i)
         combined_content = "".join([item[1] for item in remaining_right_list[:i+1]])
         
         # Calculate similarity (1 - Normalized LD)
         sim = 1.0 - normalized_levenshtein_distance(old_content, combined_content)
         
-        if sim > current_similarity:
+        if sim >= current_similarity:
             current_similarity = sim
-            # Store the line numbers
+            # Store the line numbers corresponding to the current best match
             best_match_indices = [item[0] for item in remaining_right_list[:i+1]]
         elif sim < current_similarity:
-            # Stop when similarity decreases (Heuristic used in LHDiff)
+            # Stop when similarity decreases (heuristic)
             break
             
-    # Apply a final threshold check for the best match found
-    FINAL_SPLIT_THRESHOLD = 0.65 
+    # Return the best match if it exceeds the final threshold
     if current_similarity >= FINAL_SPLIT_THRESHOLD:
         return best_match_indices
     else:
