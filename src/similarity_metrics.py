@@ -1,28 +1,37 @@
-# src/similarity_metrics.py
+# Global flag to track if imports succeeded
+DEPENDENCIES_LOADED = False
+CONTEXT_VECTORIZER = None
 
 # --- Imports for external libraries ---
 try:
     from datasketch import SimHash 
     from sklearn.feature_extraction.text import TfidfVectorizer
     from sklearn.metrics.pairwise import cosine_similarity
+    
+    # Check if the imported names are defined after the import
+    if 'SimHash' in locals() and 'TfidfVectorizer' in locals():
+        DEPENDENCIES_LOADED = True
+    else:
+        # Fallback if import was silent but names aren't available
+        raise ImportError
+        
 except ImportError:
-    print("WARNING: datasketch or scikit-learn not found. Simhash/TFIDF will use placeholders.")
+    print("WARNING: Core dependencies (datasketch/scikit-learn) not fully loaded. Using placeholder metrics.")
 
-# Global vectorizer for context similarity (initialized lazily)
-CONTEXT_VECTORIZER = None
 
 # --- Step 3: Efficient Candidate Generation ---
 
 def generate_simhash(line_content: str, context_text: str, num_bits: int = 64) -> int:
     """Generates a Simhash value for the combined content."""
     combined_text = (line_content + " " + context_text).encode('utf8')
-    try:
+    
+    if DEPENDENCIES_LOADED:
+        # This branch runs if SimHash was imported successfully
         s_hash = SimHash(combined_text, num_bits=num_bits)
         return s_hash.hash
-    except NameError:
-        # Placeholder if datasketch is not installed
+    else:
+        # Placeholder if datasketch is not installed/loaded
         return hash(combined_text) % (2**num_bits)
-
 
 def hamming_distance(hash1: int, hash2: int) -> int:
     """Calculates the number of differing bits between two Simhash values."""
@@ -32,12 +41,16 @@ def hamming_distance(hash1: int, hash2: int) -> int:
 
 def get_context_similarity(context1: str, context2: str) -> float:
     """
-    Calculates Cosine Similarity on context vectors (TF-IDF).
+    Calculates Cosine Similarity on context vectors (TF-IDF), or uses placeholder.
     """
     global CONTEXT_VECTORIZER
     
+    if not DEPENDENCIES_LOADED:
+        # Placeholder if scikit-learn is not installed/loaded
+        return 1.0 if context1 == context2 else 0.5
+
+    # If dependencies are loaded, proceed with TFIDF calculation
     if not CONTEXT_VECTORIZER:
-        # Initialize TF-IDF Vectorizer
         CONTEXT_VECTORIZER = TfidfVectorizer(stop_words='english')
 
     # Handle empty contexts
@@ -47,25 +60,18 @@ def get_context_similarity(context1: str, context2: str) -> float:
         return 0.0
 
     documents = [context1, context2]
-    try:
-        # Fit and transform requires a list of documents
-        tfidf_matrix = CONTEXT_VECTORIZER.fit_transform(documents)
-        # Calculate cosine similarity (returns matrix, we take the 1,0 element)
-        sim_matrix = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
-        return sim_matrix[0][0]
-    except NameError:
-        # Placeholder if scikit-learn is not installed
-        return 1.0 if context1 == context2 else 0.5
+    
+    # Use fit_transform only if CONTEXT_VECTORIZER is a TfidfVectorizer instance
+    tfidf_matrix = CONTEXT_VECTORIZER.fit_transform(documents)
+    sim_matrix = cosine_similarity(tfidf_matrix[0:1], tfidf_matrix[1:2])
+    return sim_matrix[0][0]
 
+# --- Levenshtein (LD) and Combined Score functions are dependency-independent ---
 
 def levenshtein_distance(s1: str, s2: str) -> int:
     """Calculates the standard Levenshtein distance (edit distance)."""
-    if len(s1) < len(s2):
-        s1, s2 = s2, s1
-
-    if len(s2) == 0:
-        return len(s1)
-
+    if len(s1) < len(s2): s1, s2 = s2, s1
+    if len(s2) == 0: return len(s1)
     previous_row = list(range(len(s2) + 1))
     for i, c1 in enumerate(s1):
         current_row = [i + 1]
@@ -75,15 +81,12 @@ def levenshtein_distance(s1: str, s2: str) -> int:
             substitutions = previous_row[j] + (c1 != c2)
             current_row.append(min(insertions, deletions, substitutions))
         previous_row = current_row
-    
     return previous_row[-1]
 
 def normalized_levenshtein_distance(s1: str, s2: str) -> float:
     """Normalizes LD to a score between 0 and 1."""
     max_len = max(len(s1), len(s2))
-    if max_len == 0:
-        return 0.0
-        
+    if max_len == 0: return 0.0
     ld = levenshtein_distance(s1, s2)
     return ld / max_len
 
