@@ -1,0 +1,13 @@
+file_name,old_start,old_end,new_start,new_end,mapping_type
+ArrayReference_1.java,165,165,163,163,1:1_OR_N:M
+ArrayReference_1.java,166,166,164,164,1:1_OR_N:M
+ArrayReference_1.java,167,167,165,165,1:1_OR_N:M
+ArrayReference_1.java,168,168,-1,-1,DELETED
+ArrayReference_1.java,169,169,166,166,1:1_OR_N:M
+ArrayReference_1.java,170,170,169,169,1:1_OR_N:M
+ArrayReference_1.java,171,171,-1,-1,DELETED
+ArrayReference_1.java,173,173,172,172,1:1_OR_N:M
+ArrayReference_1.java,174,174,173,173,1:1_OR_N:M
+ArrayReference_1.java,175,175,-1,-1,DELETED
+ArrayReference_1.java,176,176,174,174,1:1_OR_N:M
+ArrayReference_1.java,177,177,167,167,1:1_OR_N:M

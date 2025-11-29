@@ -1,0 +1,20 @@
+Keyboard
+Mouse
+Monitor
+Printer
+Scanner
+Webcam
+Microphone
+Speaker
+Headset
+Router
+Modem
+Switch
+Hub
+USB drive
+External HDD
+SSD
+Power supply
+Graphics card
+Motherboard
+CPU
