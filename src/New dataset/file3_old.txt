@@ -1,0 +1,20 @@
+Math
+Physics
+Chemistry
+Biology
+Computer Science
+Engineering
+Statistics
+Economics
+Philosophy
+Psychology
+Sociology
+History
+Geography
+Linguistics
+Anthropology
+Art
+Music
+Theatre
+Architecture
+Law

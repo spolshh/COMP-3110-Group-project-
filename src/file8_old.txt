@@ -1,0 +1,20 @@
+Pizza
+Burger
+Pasta
+Salad
+Taco
+Sushi
+Ramen
+Curry
+Stew
+Sandwich
+Wrap
+Fries
+Onion rings
+Nuggets
+Omelette
+Pancake
+Waffle
+Bagel
+Muffin
+Donut
