@@ -1,0 +1,20 @@
+Spring
+Summer
+Fall
+Winter
+Equinox
+Solstice
+Monsoon
+Dry season
+Rainy season
+Hurricane
+Thunderstorm
+Blizzard
+Heatwave
+Cold snap
+Flood
+Drought
+Fog
+Hail
+Sleet
+Drizzle

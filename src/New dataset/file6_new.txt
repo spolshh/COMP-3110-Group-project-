@@ -1,0 +1,20 @@
+Dog
+Cat
+Horse
+Bird
+Fish
+Rabbit
+Hamster
+Guinea pig
+Ferret
+Turtle
+Lizard
+Frog
+Snake
+Goat
+Sheep
+Cow
+Pig
+Donkey
+Chicken
+Duck
