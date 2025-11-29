@@ -1,7 +1,7 @@
 
 def normalize_line(line_text: str) -> str:
     """Applies normalization to a single line of code."""
-    if not line_text:
+    if not line_text: 
         return ""
         
     normalized = line_text.lower()
