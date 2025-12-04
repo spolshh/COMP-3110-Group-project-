@@ -1,0 +1,23 @@
+No external dependencies are required to run this project.
+
+It uses only the Python 3 Standard Library.
+
+Libraries used:
+
+- os (Standard)
+
+- glob (Standard)
+
+- re (Standard)
+
+- math (Standard)
+
+- difflib (Standard)
+
+- collections (Standard)
+
+- xml.etree.ElementTree (Standard)
+
+- utils
+
+Requires Python 3.6 or higher.
