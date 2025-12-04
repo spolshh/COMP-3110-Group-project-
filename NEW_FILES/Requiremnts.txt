@@ -18,6 +18,4 @@ Libraries used:
 
 - xml.etree.ElementTree (Standard)
 
-- utils
-
 Requires Python 3.6 or higher.
